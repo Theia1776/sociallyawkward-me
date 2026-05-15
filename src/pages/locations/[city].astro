@@ -1,0 +1,165 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { rgvCities, type RgvCity } from '../../data/rgv-cities';
+
+// Generate one static page per city at build time.
+// `params.city` matches the [city] file-route bracket; `props.city` carries the full record.
+export async function getStaticPaths() {
+  return rgvCities.map((city) => ({
+    params: { city: city.slug },
+    props: { city },
+  }));
+}
+
+interface Props {
+  city: RgvCity;
+}
+
+const { city } = Astro.props;
+
+const TEAL = '#05d7d1';
+const GOLD = '#E8B84B';
+
+// LocalBusiness structured data scoped to this city. Asserts that we serve this specific
+// locality plus the broader Rio Grande Valley — gives Google a clean local-SEO signal.
+const businessData = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `https://www.sociallyawkward.me/locations/${city.slug}/#business`,
+  name: 'Socially Awkward Media',
+  description: `Web design, logo design, and graphic design for small businesses in ${city.name}, ${city.county}, Texas — and the wider Rio Grande Valley.`,
+  url: `https://www.sociallyawkward.me/locations/${city.slug}/`,
+  image: 'https://www.sociallyawkward.me/ollie-full-body.png',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Laguna Vista',
+    addressRegion: 'TX',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    {
+      '@type': 'City',
+      name: city.name,
+      containedInPlace: { '@type': 'AdministrativeArea', name: city.county },
+    },
+    { '@type': 'Place', name: 'Rio Grande Valley' },
+  ],
+  founder: { '@type': 'Person', name: 'Philothei Goodner' },
+  knowsAbout: ['Web Design', 'Logo Design', 'Brand Identity', 'Graphic Design'],
+  makesOffer: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Logo Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Graphic Design' } },
+  ],
+};
+
+const services = [
+  {
+    name: 'Web Design',
+    description: 'Mobile-friendly websites that load fast and feel like they cost more than they did.',
+  },
+  {
+    name: 'Logo Design',
+    description: 'Logos, color palettes, and brand kits that make your business look the part.',
+  },
+  {
+    name: 'Graphic Design',
+    description: 'Flyers, social graphics, signage — anything you need to communicate visually.',
+  },
+];
+---
+
+<Layout
+  title={`Web Design in ${city.name}, TX | Socially Awkward Media`}
+  description={city.metaDescription}
+  structuredData={businessData}
+  wide
+>
+  {/* ---------- City banner ---------- */}
+  <header class="city-banner">
+    <p class="city-eyebrow">{city.county} · Rio Grande Valley</p>
+    <h1 class="city-heading">
+      <span class="city-name">{city.name.toUpperCase()}</span>
+    </h1>
+    <p class="city-services-line">Web Design · Logo Design · Graphic Design</p>
+  </header>
+
+  {/* ---------- Intro + area blurb ---------- */}
+  <section class="mt-12 mx-auto max-w-3xl">
+    <p class="text-lg leading-relaxed text-neutral-800">{city.intro}</p>
+    <p class="mt-6 text-base italic leading-relaxed text-neutral-600">{city.areaBlurb}</p>
+  </section>
+
+  {/* ---------- Service cards ---------- */}
+  <section class="mt-14 grid gap-6 md:grid-cols-3">
+    {services.map((s) => (
+      <article class="overflow-hidden rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+        <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+        <div class="p-6">
+          <h2 class="text-xl font-bold tracking-tight text-neutral-900">{s.name}</h2>
+          <p class="mt-3 text-sm leading-relaxed text-neutral-700">{s.description}</p>
+          <p class="mt-4 text-xs font-semibold uppercase tracking-wider" style={`color: ${TEAL};`}>
+            Available in {city.name}
+          </p>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  {/* ---------- CTA ---------- */}
+  <div class="mt-16 mb-16 text-center">
+    <p class="mb-5 text-xl font-semibold text-neutral-900">Ready to get started in {city.name}?</p>
+    <a
+      href="/contact"
+      class="inline-flex items-center justify-center rounded-full px-8 py-3.5 text-base font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.99]"
+      style={`background-color: ${TEAL};`}
+    >
+      Let's talk &rarr;
+    </a>
+  </div>
+</Layout>
+
+<style>
+  /* Banner — solid teal with the city name set in Lilita One on top.
+     Smaller scale than the top-level page banners (e.g., DREAM BIG, LET'S TALK) because
+     city names vary widely in length. `clamp()` scales the heading down on narrow viewports. */
+  .city-banner {
+    background-color: #05d7d1;
+    border-radius: 12px;
+    padding: 32px 24px;
+    text-align: center;
+  }
+  .city-eyebrow {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #ffffff;
+    margin: 0 0 12px;
+    opacity: 0.95;
+  }
+  .city-heading {
+    margin: 0;
+    line-height: 1;
+  }
+  .city-name {
+    display: inline-block;
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 8px #E8B84B;
+    paint-order: stroke fill;
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    line-height: 1;
+  }
+  .city-services-line {
+    margin: 18px 0 0;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    font-size: clamp(0.85rem, 1.6vw, 1rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+</style>

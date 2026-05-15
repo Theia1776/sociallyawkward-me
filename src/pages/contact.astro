@@ -1,8 +1,212 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const TEAL = '#05d7d1';
+const GOLD = '#E8B84B';
 ---
 
-<Layout title="Contact — sociallyawkward.me">
-  <h1 class="text-3xl font-semibold tracking-tight">Contact</h1>
-  <p class="mt-4 text-neutral-600">Placeholder contact page.</p>
+<Layout
+  title="Contact | RGV Web & Logo Design — Socially Awkward Media"
+  description="Get in touch — web and logo design for small businesses across the Rio Grande Valley, from Edinburg and Mission to Pharr and San Benito. Laguna Vista, TX."
+  image="/contact-banner.jpg"
+>
+  <header class="contact-banner">
+    <h1 class="contact-heading">LET'S TALK</h1>
+  </header>
+
+  <div class="mx-auto mt-10 max-w-2xl">
+    <div
+      class="overflow-hidden rounded-xl bg-white shadow-sm"
+      style={`border: 2px solid ${TEAL};`}
+    >
+      {/* Gold accent bar — matches Dream Big card style */}
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+
+      <form
+        id="contact-form"
+        method="POST"
+        action="https://formspree.io/f/mojrbgbp"
+        class="space-y-5 p-8"
+        novalidate
+      >
+        <input type="hidden" name="_subject" value="New Inquiry — Socially Awkward Media" />
+
+        <div>
+          <label for="name" class="block text-sm font-bold tracking-tight text-neutral-900">Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            class="contact-input mt-1.5 w-full rounded-md bg-white px-4 py-2.5 text-neutral-900 placeholder-neutral-400"
+          />
+        </div>
+
+        <div>
+          <label for="phone" class="block text-sm font-bold tracking-tight text-neutral-900">Phone</label>
+          <input
+            id="phone"
+            name="phone"
+            type="tel"
+            required
+            autocomplete="tel"
+            class="contact-input mt-1.5 w-full rounded-md bg-white px-4 py-2.5 text-neutral-900 placeholder-neutral-400"
+          />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-bold tracking-tight text-neutral-900">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            required
+            autocomplete="email"
+            class="contact-input mt-1.5 w-full rounded-md bg-white px-4 py-2.5 text-neutral-900 placeholder-neutral-400"
+          />
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-bold tracking-tight text-neutral-900">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="5"
+            required
+            class="contact-input mt-1.5 w-full resize-y rounded-md bg-white px-4 py-2.5 text-neutral-900 placeholder-neutral-400"
+          ></textarea>
+        </div>
+
+        {/* Inline error (hidden by default) */}
+        <div
+          id="contact-error"
+          class="hidden rounded-md px-4 py-3 text-sm"
+          style="background-color: #fef2f2; border: 1px solid #fca5a5; color: #b91c1c;"
+          role="alert"
+        >
+          Awww shucks! That didn&rsquo;t go through right. Try again.
+        </div>
+
+        <div class="pt-2">
+          <button
+            id="contact-submit"
+            type="submit"
+            class="inline-flex w-full items-center justify-center rounded-full px-8 py-3.5 text-base font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70 disabled:hover:scale-100"
+            style={`background-color: ${TEAL};`}
+          >
+            Ready &mdash; and DREAM!
+          </button>
+        </div>
+      </form>
+
+      {/* Success state (hidden by default, revealed after successful submit) */}
+      <div id="contact-success" class="hidden p-10 text-center">
+        <div
+          class="mx-auto mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full"
+          style={`background-color: ${GOLD};`}
+        >
+          <i class="ti ti-check" style="font-size:38px;line-height:1;color:#fff" aria-hidden="true"></i>
+        </div>
+        <h2 class="text-2xl font-bold tracking-tight">Your idea is going to be great!</h2>
+        <p class="mx-auto mt-3 max-w-md italic leading-relaxed text-neutral-700">
+          We will contact you soon. 🤩
+        </p>
+      </div>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  /* Banner — image bg, matches Dream Big layout.
+     Image is a wide 1140x200 illustration (envelope left, phone right, empty teal middle for the title).
+     `contain` keeps the envelope + phone fully visible; matching teal bg-color hides the top/bottom bands. */
+  .contact-banner {
+    background-image: url('/contact-banner.jpg');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #05d7d1;
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+  .contact-heading {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    font-size: 100px;
+    white-space: nowrap;
+    line-height: 1;
+    margin: 0;
+  }
+
+  /* Inputs share the same teal-bordered, gold-focus look as the Dream Big cards */
+  .contact-input {
+    border: 2px solid #05d7d1;
+    outline: none;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  }
+  .contact-input:focus {
+    border-color: #E8B84B;
+    box-shadow: 0 0 0 3px rgba(232, 184, 75, 0.25);
+  }
+  .contact-input:user-invalid {
+    border-color: #ef4444;
+  }
+</style>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement | null;
+  const success = document.getElementById('contact-success');
+  const error = document.getElementById('contact-error');
+  const submitBtn = document.getElementById('contact-submit') as HTMLButtonElement | null;
+
+  if (form && success && error && submitBtn) {
+    const originalLabel = submitBtn.textContent;
+
+    form.addEventListener('submit', async (e) => {
+      // Let the browser surface required-field validation first
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      e.preventDefault();
+      error.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+
+      try {
+        const formData = new FormData(form);
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: formData,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (response.ok) {
+          form.classList.add('hidden');
+          success.classList.remove('hidden');
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          let detail = '';
+          try {
+            const data = await response.json();
+            if (data && Array.isArray(data.errors) && data.errors.length) {
+              detail = data.errors.map((er: { message?: string }) => er.message).filter(Boolean).join(' ');
+            }
+          } catch {}
+          if (detail) error.textContent = detail;
+          error.classList.remove('hidden');
+          submitBtn.disabled = false;
+          submitBtn.textContent = originalLabel;
+        }
+      } catch {
+        error.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
+    });
+  }
+</script>

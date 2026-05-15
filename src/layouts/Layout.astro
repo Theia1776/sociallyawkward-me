@@ -1,28 +1,94 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
+import OllieIntro from '../components/OllieIntro.astro';
 
 interface Props {
   title: string;
+  description: string;
+  /** Path or URL to OG/Twitter share image. Resolved against `site` if relative. */
+  image?: string;
+  /** Optional JSON-LD structured data object to inject in the head. */
+  structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
+  wide?: boolean;
+  bleed?: boolean;
+  /** If true, suppress the OllieIntro corner mascot + intro animation on this page. */
+  noMascot?: boolean;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description,
+  image = '/ollie-full-body.png',
+  structuredData,
+  wide = false,
+  bleed = false,
+  noMascot = false,
+} = Astro.props;
+
+// Build absolute URLs against the configured `site` in astro.config.mjs.
+// Astro.site is the canonical site URL; Astro.url is the current request URL.
+const siteUrl = Astro.site ?? new URL('https://www.sociallyawkward.me');
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const imageUrl = new URL(image, siteUrl).href;
+const SITE_NAME = 'Socially Awkward Media';
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+
+    {/* Favicon */}
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    {/* Primary meta */}
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Philothei Goodner" />
+    <meta name="theme-color" content="#05d7d1" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    {/* Open Graph */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:locale" content="en_US" />
+
+    {/* Twitter / X Card */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={imageUrl} />
+
+    {/* Fonts */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lilita+One&family=Permanent+Marker&family=Righteous&display=swap"
+      rel="stylesheet"
+    />
+
+    {/* Structured data (JSON-LD) — only injected when a page passes it (currently just home). */}
+    {structuredData && (
+      <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+    )}
   </head>
   <body class="min-h-screen bg-white text-neutral-800 antialiased">
     <Nav />
-    <main class="mx-auto max-w-3xl px-4 py-12">
+    {bleed ? (
       <slot />
-    </main>
+    ) : (
+      <main class:list={['mx-auto px-4 py-12', wide ? 'max-w-6xl' : 'max-w-3xl']}>
+        <slot />
+      </main>
+    )}
+    {!noMascot && <OllieIntro />}
   </body>
 </html>

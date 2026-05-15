@@ -1,0 +1,151 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { rgvCities, citiesByRegion, type RgvRegion } from '../../data/rgv-cities';
+
+const TEAL = '#05d7d1';
+const GOLD = '#E8B84B';
+
+const grouped = citiesByRegion();
+const regionOrder: RgvRegion[] = ['West', 'Central', 'East'];
+const regionLabels: Record<RgvRegion, string> = {
+  West: 'Western RGV',
+  Central: 'Central RGV',
+  East: 'Eastern RGV',
+};
+const regionSubtitles: Record<RgvRegion, string> = {
+  West: 'Starr County and western Hidalgo County',
+  Central: 'Eastern Hidalgo and western Cameron County',
+  East: 'Eastern Cameron County and the coast',
+};
+
+// LocalBusiness structured data for the locations index — names every city we serve.
+const businessData = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://www.sociallyawkward.me/locations/#business',
+  name: 'Socially Awkward Media',
+  description:
+    'Web design, logo design, and graphic design for small businesses across the entire Rio Grande Valley.',
+  url: 'https://www.sociallyawkward.me/locations/',
+  image: 'https://www.sociallyawkward.me/ollie-full-body.png',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Laguna Vista',
+    addressRegion: 'TX',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    { '@type': 'Place', name: 'Rio Grande Valley' },
+    ...rgvCities.map((c) => ({
+      '@type': 'City',
+      name: c.name,
+      containedInPlace: { '@type': 'AdministrativeArea', name: c.county },
+    })),
+  ],
+  founder: { '@type': 'Person', name: 'Philothei Goodner' },
+  knowsAbout: ['Web Design', 'Logo Design', 'Brand Identity', 'Graphic Design'],
+};
+---
+
+<Layout
+  title="Service Areas | RGV Web & Logo Design — Socially Awkward Media"
+  description="Web design and logo design for small businesses across the Rio Grande Valley — Brownsville, McAllen, Harlingen, Edinburg, and every town in between."
+  structuredData={businessData}
+  wide
+>
+  {/* ---------- Banner ---------- */}
+  <header class="locations-banner">
+    <h1 class="locations-heading">RGV LOCATIONS</h1>
+    <p class="locations-subtitle">
+      Web design, logo design, and graphic design for small businesses across the Rio Grande Valley.
+    </p>
+  </header>
+
+  <p class="mx-auto mt-10 max-w-2xl text-center text-lg leading-relaxed text-neutral-800">
+    Based in <strong>Laguna Vista</strong> and serving the entire Valley &mdash; from Rio Grande City in the west to South Padre Island on the coast. Pick your town below to see how we help small businesses there.
+  </p>
+
+  {/* ---------- City grid grouped by sub-region ---------- */}
+  {regionOrder.map((region) => (
+    <section class="mt-14">
+      <div class="text-center">
+        <h2 class="region-heading">{regionLabels[region]}</h2>
+        <p class="mt-1 text-sm italic text-neutral-500">{regionSubtitles[region]}</p>
+      </div>
+
+      <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {grouped[region].map((city) => (
+          <a
+            href={`/locations/${city.slug}/`}
+            class="group block overflow-hidden rounded-xl bg-white shadow-sm transition-shadow hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            style={`border: 2px solid ${TEAL};`}
+          >
+            <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+            <div class="p-5">
+              <h3 class="text-lg font-bold tracking-tight text-neutral-900">{city.name}</h3>
+              <p class="mt-1 text-xs font-semibold uppercase tracking-wider text-neutral-500">{city.county}</p>
+              <p class="mt-3 text-sm leading-relaxed text-neutral-700">{city.areaBlurb}</p>
+              <p class="mt-4 text-sm font-bold transition-colors group-hover:underline" style={`color: ${TEAL};`}>
+                See {city.name} services &rarr;
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  ))}
+
+  {/* ---------- "Don't see your town" CTA ---------- */}
+  <div class="mt-16 mb-16 text-center">
+    <p class="mb-3 text-xl font-semibold text-neutral-900">Don't see your town?</p>
+    <p class="mx-auto mb-6 max-w-xl text-neutral-700">
+      We serve the entire Rio Grande Valley. If your business is anywhere in the RGV, we're happy to help.
+    </p>
+    <a
+      href="/contact"
+      class="inline-flex items-center justify-center rounded-full px-8 py-3.5 text-base font-bold text-white shadow-md transition-transform hover:scale-[1.02] hover:shadow-lg active:scale-[0.99]"
+      style={`background-color: ${TEAL};`}
+    >
+      Get in touch &rarr;
+    </a>
+  </div>
+</Layout>
+
+<style>
+  /* Banner — solid teal, "RGV LOCATIONS" set in Lilita One with the standard 12px gold stroke. */
+  .locations-banner {
+    background-color: #05d7d1;
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+  .locations-heading {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    font-size: clamp(2.5rem, 8vw, 5rem);
+    white-space: nowrap;
+    line-height: 1;
+    margin: 0;
+  }
+  .locations-subtitle {
+    margin: 18px auto 0;
+    max-width: 620px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: #ffffff;
+    font-style: italic;
+  }
+  .region-heading {
+    font-family: 'Lilita One', cursive;
+    font-size: 1.5rem;
+    color: #05d7d1;
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+  @media (min-width: 768px) {
+    .region-heading { font-size: 1.75rem; }
+  }
+</style>

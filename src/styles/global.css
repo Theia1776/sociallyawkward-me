@@ -1,1 +1,7 @@
 @import "tailwindcss";
+@import "@tabler/icons-webfont/dist/tabler-icons.min.css";
+
+/* Smooth scrolling for anchor links across the site (used by the pricing page's sticky menu) */
+html {
+  scroll-behavior: smooth;
+}

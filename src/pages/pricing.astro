@@ -1,0 +1,405 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const TEAL = '#05d7d1';
+const GOLD = '#E8B84B';
+
+type Tier = {
+  name: string;
+  price: string;
+  features: string[];
+};
+
+const tiers: Tier[] = [
+  {
+    name: 'Website Tier 1',
+    price: '$1,500',
+    features: [
+      'Up to 5 pages',
+      'Contact form',
+      'Mobile friendly',
+      'Basic SEO setup',
+      '2 rounds of revisions pre-launch',
+    ],
+  },
+  {
+    name: 'Website Tier 2',
+    price: '$4,500',
+    features: [
+      'Up to 10 pages',
+      'Contact form + 2 additional forms',
+      'Mobile friendly',
+      'Gallery or portfolio section',
+      'Booking/calendar integration',
+      'Basic SEO setup',
+      '2 rounds of revisions pre-launch',
+    ],
+  },
+  {
+    name: 'Shop Starter',
+    price: '$7,000',
+    features: [
+      'Everything in Tier 2',
+      'Online store setup',
+      'Payment gateway integration',
+      'Up to 49 products loaded at launch',
+      '2 rounds of revisions pre-launch',
+    ],
+  },
+  {
+    name: 'Shop Full',
+    price: '$8,500',
+    features: [
+      'Everything in Shop Starter',
+      'Up to 100 products loaded at launch',
+    ],
+  },
+  {
+    name: 'Logo Standard',
+    price: '$350',
+    features: [
+      '1 logo concept',
+      'PNG, JPG, PDF files',
+      '1 revision round',
+    ],
+  },
+  {
+    name: 'Logo + Brand Kit',
+    price: '$750',
+    features: [
+      'Up to 3 logo concepts',
+      'PNG, JPG, PDF, SVG files',
+      'Color + black & white versions',
+      'Brand guide document',
+      '2 revision rounds',
+    ],
+  },
+  {
+    name: 'Maintenance Basic',
+    price: '$175/mo',
+    features: [
+      'Security updates',
+      'Backups',
+      'Performance checks',
+      'Hosting management',
+    ],
+  },
+  {
+    name: 'Maintenance Priority',
+    price: '$250/mo',
+    features: [
+      'Everything in Basic',
+      '2 content updates per month',
+      'Priority queue',
+    ],
+  },
+];
+
+type Rate = { label: string; rate: string };
+const additionalRates: Rate[] = [
+  { label: 'Post-launch edits', rate: '$75/hr, 1hr minimum' },
+  { label: '48hr rush', rate: '$100/hr, 1hr minimum' },
+  { label: '24hr rush', rate: '$150/hr, 1hr minimum' },
+  { label: 'Additional products beyond 100', rate: '$75/hr' },
+  { label: 'Extra logo revision (Standard)', rate: '$75 flat' },
+  { label: 'Extra logo revision (Brand Kit)', rate: '$50 flat' },
+];
+---
+
+<Layout
+  title="Pricing | RGV Web & Logo Design — Socially Awkward Media"
+  description="Transparent pricing for web design, logo design, and brand kits. Built for RGV small businesses. Veteran-owned, woman-owned, based in Laguna Vista, TX."
+  image="/pricing-banner-bg.png"
+  wide
+>
+  {/* ---------- Banner ---------- */}
+  <header class="pricing-banner">
+    <h1 class="pricing-heading">SERVICES<br />&amp; PRICING</h1>
+  </header>
+
+  {/* ---------- Sticky anchor menu — jumps to each section ---------- */}
+  <nav class="pricing-anchor-menu" aria-label="Jump to section">
+    <ul class="pricing-anchor-list">
+      <li><a href="#your-site" class="pricing-anchor-link">Your Site</a></li>
+      <li><a href="#bundle" class="pricing-anchor-link">Bundle</a></li>
+      <li><a href="#discounts" class="pricing-anchor-link">Discounts</a></li>
+      <li><a href="#services" class="pricing-anchor-link">Services</a></li>
+      <li><a href="#additional-rates" class="pricing-anchor-link">Additional Rates</a></li>
+      <li><a href="#revision-policy" class="pricing-anchor-link">Revision Policy</a></li>
+    </ul>
+  </nav>
+
+  {/* ---------- Your Site. Your Rules. ---------- */}
+  <section id="your-site" class="mt-12 scroll-mt-24">
+    <div class="overflow-hidden rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+      <div class="p-6 md:p-8">
+        <h2 class="section-heading section-heading-card">YOUR SITE. YOUR RULES.</h2>
+        <div class="mt-4 space-y-3 text-sm leading-relaxed text-neutral-800 md:text-base">
+          <p>
+            When Socially Awkward Media builds your website, <span class="font-bold">you own it</span>. Full stop.
+          </p>
+          <p>
+            No hostage situations here. If you ever decide to part ways, we'll make sure you walk away with everything you paid for — your site, your content, your brand. Clean and simple.
+          </p>
+          <p>
+            We believe in empowering small businesses, not creating dependency. <span class="italic">You're a client, not a prisoner.</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Bundle + Discounts ---------- */}
+  <section class="mt-12 grid gap-6 md:grid-cols-2">
+    <div id="bundle" class="overflow-hidden scroll-mt-24 rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+      <div class="p-6">
+        <h2 class="section-heading section-heading-card">BUNDLE</h2>
+        <p class="mt-4 text-base leading-relaxed text-neutral-800">
+          Book a website and logo together — <span class="font-bold" style={`color: ${TEAL};`}>save $200</span>.
+        </p>
+      </div>
+    </div>
+
+    <div id="discounts" class="overflow-hidden scroll-mt-24 rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+      <div class="p-6">
+        <h2 class="section-heading section-heading-card">DISCOUNTS</h2>
+        <p class="mt-4 text-sm leading-relaxed text-neutral-800">
+          <span class="font-bold">Active first responders</span> receive 10% off all services. Valid ID required.
+        </p>
+        <p class="mt-3 text-sm leading-relaxed text-neutral-800">
+          Socially Awkward Media is a veteran-owned business. Military veterans may qualify for special discounts — contact Theia directly for details. Valid ID required.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Service tier cards ---------- */}
+  <section id="services" class="mt-12 grid auto-rows-fr scroll-mt-24 grid-cols-1 gap-6 md:grid-cols-2">
+    {tiers.map((t) => (
+      <article
+        class="overflow-hidden rounded-xl bg-white shadow-sm"
+        style={`border: 2px solid ${TEAL};`}
+      >
+        {/* Gold accent bar */}
+        <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+
+        <div class="flex h-full flex-col p-6">
+          <h3 class="text-xl font-bold tracking-tight text-neutral-900">{t.name}</h3>
+          <div class="mt-2 text-4xl font-bold leading-none" style={`color: ${TEAL};`}>{t.price}</div>
+          <ul class="mt-5 space-y-2 text-sm leading-relaxed text-neutral-700">
+            {t.features.map((f) => (
+              <li class="flex items-start gap-2">
+                <span aria-hidden="true" class="mt-0.5 inline-block flex-shrink-0 font-bold" style={`color: ${TEAL};`}>✓</span>
+                <span>{f}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </article>
+    ))}
+  </section>
+
+  {/* ---------- Additional Rates ---------- */}
+  <section id="additional-rates" class="mt-16 scroll-mt-24">
+    <h2 class="section-heading">ADDITIONAL RATES</h2>
+    <div class="mt-5 overflow-hidden rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+      <ul class="divide-y divide-neutral-100 px-2 py-2">
+        {additionalRates.map((r) => (
+          <li class="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+            <span class="font-medium text-neutral-900">{r.label}</span>
+            <span class="font-bold" style={`color: ${TEAL};`}>{r.rate}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {/* ---------- Revision Policy ---------- */}
+  <section id="revision-policy" class="mt-12 mb-16 scroll-mt-24">
+    <div class="overflow-hidden rounded-xl bg-white shadow-sm" style={`border: 2px solid ${TEAL};`}>
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+      <div class="p-6 md:p-8">
+        <h2 class="section-heading section-heading-card">REVISION POLICY</h2>
+        <div class="mt-4 space-y-3 text-sm leading-relaxed text-neutral-800 md:text-base">
+          <p>
+            Every project includes <span class="font-bold">2 rounds of revisions before launch</span>. A revision round means one consolidated list of changes submitted at a time — not a running stream of individual requests. This keeps the process clean and efficient for both of us.
+          </p>
+          <p>
+            A revision is not a redesign. Adding new pages, new features, or starting a section over from scratch falls outside revision scope and will be quoted separately.
+          </p>
+          <p>
+            Additional pre-launch revision rounds beyond the included 2 are billed at <span class="font-bold">$75/hr with a 1 hour minimum</span>.
+          </p>
+          <p>
+            Once your site launches, all changes are billed at <span class="font-bold">$75/hr with a 1 hour minimum</span>. Need it faster? Rush rates apply — <span class="font-bold">$100/hr for 48 hour turnaround</span>, <span class="font-bold">$150/hr for 24 hour turnaround</span>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* ---------- Back-to-top floating button ---------- */}
+  <button class="back-to-top" type="button" aria-label="Back to top" data-visible="false">
+    <i class="ti ti-arrow-up" aria-hidden="true"></i>
+  </button>
+</Layout>
+
+<style>
+  /* Banner — pricing-banner-bg.png is a wide horizontal illustration with content at
+     both edges (capybara left, "Services" sign right). `contain` keeps both edge elements
+     fully visible; the teal background-color matches the image's own teal so any leftover
+     bands top/bottom blend invisibly. Headline sits on top. */
+  .pricing-banner {
+    background-color: #05d7d1;
+    background-image: url('/pricing-banner-bg.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+  }
+  .pricing-heading {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    font-size: 100px;
+    white-space: nowrap;
+    line-height: 1;
+    margin: 0;
+  }
+
+  /* Sticky anchor menu — pill links in brand teal, gold accent bar below.
+     Sticks to viewport top once the user scrolls past the banner. */
+  .pricing-anchor-menu {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: #ffffff;
+    border-bottom: 3px solid #E8B84B; /* gold accent strip on bottom edge */
+    padding: 10px 12px;
+    margin-top: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  }
+  .pricing-anchor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .pricing-anchor-link {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #05d7d1;
+    text-decoration: none;
+    border: 1.5px solid #05d7d1;
+    background: #ffffff;
+    white-space: nowrap;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .pricing-anchor-link:hover,
+  .pricing-anchor-link:focus-visible {
+    background: #05d7d1;
+    color: #ffffff;
+    outline: none;
+  }
+  .pricing-anchor-link:focus-visible {
+    box-shadow: 0 0 0 3px rgba(232, 184, 75, 0.45); /* gold focus ring */
+  }
+
+  /* Section headings ("ADDITIONAL RATES", "BUNDLE", etc.) */
+  .section-heading {
+    font-family: 'Lilita One', cursive;
+    font-size: 1.75rem;
+    letter-spacing: 0.04em;
+    color: #05d7d1;
+    margin: 0;
+    text-align: center;
+  }
+  .section-heading-card {
+    text-align: left;
+    font-size: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .section-heading { font-size: 2rem; }
+    .section-heading-card { font-size: 1.75rem; }
+  }
+
+  /* Back-to-top floating button — bottom-center of the viewport. Hidden until the user
+     has scrolled past ~300px, then fades in and starts a gentle continuous bounce.
+     The bounce animation owns the transform property (including translateX(-50%) for
+     horizontal centering), so it must include that shift in every keyframe. */
+  .back-to-top {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #05d7d1;
+    color: #ffffff;
+    border: 2px solid #E8B84B;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
+    cursor: pointer;
+    z-index: 50;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    /* Initial hidden state */
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-50%);
+    transition: opacity 0.25s ease, background 0.15s ease;
+  }
+  .back-to-top[data-visible="true"] {
+    opacity: 1;
+    pointer-events: auto;
+    animation: back-to-top-bounce 0.6s ease-in-out infinite;
+  }
+  .back-to-top:hover { background: #04bcb6; }
+  .back-to-top:focus-visible {
+    outline: none;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18), 0 0 0 4px rgba(232, 184, 75, 0.5);
+  }
+  .back-to-top i {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  /* Gentle continuous bounce — single hop with a long rest, draws the eye without nagging.
+     Keyframes carry translateX(-50%) for centering since the animation overrides the base transform. */
+  @keyframes back-to-top-bounce {
+    0%, 55%, 100% { transform: translateX(-50%) translateY(0); }
+    25%           { transform: translateX(-50%) translateY(-7px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .back-to-top[data-visible="true"] { animation: none; }
+  }
+</style>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.back-to-top');
+  if (btn) {
+    const toggle = () => {
+      btn.dataset.visible = window.scrollY > 300 ? 'true' : 'false';
+    };
+    window.addEventListener('scroll', toggle, { passive: true });
+    toggle();
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+</script>

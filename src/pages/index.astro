@@ -1,8 +1,296 @@
 ---
 import Layout from '../layouts/Layout.astro';
----
 
-<Layout title="Home — sociallyawkward.me">
-  <h1 class="text-3xl font-semibold tracking-tight">Home</h1>
-  <p class="mt-4 text-neutral-600">Placeholder home page.</p>
+// LocalBusiness structured data — helps Google understand who Theia is, where she works,
+// and what services she offers. Lives on the home page only (canonical for the business).
+const businessData = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': 'https://www.sociallyawkward.me/#business',
+  name: 'Socially Awkward Media',
+  description:
+    'Web design, logo design, and graphic design for small businesses in the Rio Grande Valley. Veteran-owned and woman-owned, based in Laguna Vista, TX.',
+  url: 'https://www.sociallyawkward.me',
+  image: 'https://www.sociallyawkward.me/ollie-full-body.png',
+  slogan: 'Helping your brand look as good as the work you do.',
+  priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Laguna Vista',
+    addressRegion: 'TX',
+    addressCountry: 'US',
+  },
+  areaServed: [
+    { '@type': 'Place', name: 'Rio Grande Valley' },
+    { '@type': 'City', name: 'Laguna Vista' },
+    { '@type': 'City', name: 'McAllen' },
+    { '@type': 'City', name: 'Brownsville' },
+    { '@type': 'City', name: 'Harlingen' },
+    { '@type': 'City', name: 'Weslaco' },
+    { '@type': 'City', name: 'Edinburg' },
+    { '@type': 'City', name: 'Mission' },
+    { '@type': 'City', name: 'Pharr' },
+    { '@type': 'City', name: 'San Benito' },
+    { '@type': 'Place', name: 'South Padre Island' },
+  ],
+  founder: {
+    '@type': 'Person',
+    name: 'Philothei Goodner',
+  },
+  knowsAbout: ['Web Design', 'Logo Design', 'Brand Identity', 'Graphic Design'],
+  makesOffer: [
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Web Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Logo Design' } },
+    { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Graphic Design' } },
+  ],
+};
+---
+<Layout
+  title="Socially Awkward Media | Web & Logo Design in the Rio Grande Valley"
+  description="Web & logo design for Rio Grande Valley small businesses — McAllen, Brownsville, Harlingen, Weslaco. Veteran-owned, woman-owned, in Laguna Vista, TX."
+  structuredData={businessData}
+  bleed
+  noMascot
+>
+  <main class="min-h-screen flex flex-col items-center justify-center overflow-hidden" style="background: #05d7d1;">
+
+    <!-- Whiteboard card -->
+    <div class="relative flex flex-col items-center">
+
+      <!-- Board -->
+      <div
+        class="relative flex flex-col items-center justify-center rounded-2xl px-20 py-16 shadow-2xl"
+        style="background: #ffffff; border: 6px solid #000000; min-width: 500px;"
+      >
+        <p class="font-['Righteous'] text-3xl tracking-widest mb-4" style="color: #000000; position: relative; z-index: 2;">
+          SOCIALLY AWKWARD MEDIA
+        </p>
+
+        <!-- Heading stack: HELLO THERE animates in and pops; WELCOME snaps in to replace it. -->
+        <div class="hero-heading-stack">
+          <h1 class="hero-welcome">WELCOME</h1>
+          <div class="hero-hello" aria-hidden="true">HELLO THERE!</div>
+        </div>
+      </div>
+
+      <!-- Ollie — body midline aligned with the card's right edge. Vertical position
+           (bottom: -25px) unchanged so his feet stay where they were. z-index:1 keeps
+           him above the card's bg/border but below the heading (z-index:2). -->
+      <img
+        src="/ollie-full-body.png"
+        alt="Ollie the mascot"
+        class="absolute"
+        style="height: 480px; width: auto; right: -162px; bottom: -25px; z-index: 1;"
+      />
+    </div>
+
+  </main>
+
+  <!-- Full-viewport canvas for the entrance glitter burst. Fixed positioning so particles
+       can drift the full height of the page; pointer-events:none so it doesn't block clicks. -->
+  <canvas class="entrance-glitter" aria-hidden="true"></canvas>
 </Layout>
+
+<style>
+  /* Heading stack — WELCOME and HELLO THERE share the same visual slot inside the card.
+     WELCOME sits in normal flow (so it defines the card's height); HELLO THERE is absolutely
+     positioned on top, animates, then disappears, letting WELCOME show through. */
+  .hero-heading-stack {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hero-welcome,
+  .hero-hello {
+    font-family: 'Lilita One', cursive;
+    white-space: nowrap;
+    font-size: 120px;
+    line-height: 1;
+    margin: 0;
+  }
+  /* WELCOME — white fill, gold outline, matches the other page titles. */
+  .hero-welcome {
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    position: relative;
+    z-index: 2;
+    opacity: 0; /* hidden until the HELLO THERE pop */
+  }
+  .hero-welcome.is-visible {
+    opacity: 1;
+  }
+  /* HELLO THERE — gold fill with a chunky black outline for that bubbly look.
+     Animates in, blinks 4×, then pops. */
+  .hero-hello {
+    color: #E8B84B;
+    -webkit-text-fill-color: #E8B84B;
+    -webkit-text-stroke: 8px #000000;
+    paint-order: stroke fill;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* translate(-50%, -50%) self-centers; scale grows via the keyframe below. */
+    transform: translate(-50%, -50%) scale(0.15);
+    z-index: 3;
+    will-change: transform, opacity;
+    pointer-events: none;
+  }
+  .hero-hello.is-animating {
+    /* Ease-in curve so the text inflates gradually and *stretches* toward the bursting
+       point at the end — like an overfilled balloon — rather than easing into a halt. */
+    animation: hero-grow 3800ms cubic-bezier(0.55, 0, 0.85, 0.6) forwards;
+  }
+  /* Grow from a small dot to ~1.7x normal — late-stage stretch pushes well past the
+     card boundary on a desktop viewport before the pop. */
+  @keyframes hero-grow {
+    from { transform: translate(-50%, -50%) scale(0.15); }
+    to   { transform: translate(-50%, -50%) scale(1.7); }
+  }
+  .hero-hello.is-gone {
+    display: none;
+  }
+
+  /* Full-viewport glitter canvas. */
+  .entrance-glitter {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: none;
+  }
+
+  /* Respect reduced-motion: skip the animation entirely, just show WELCOME. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-welcome { opacity: 1; }
+    .hero-hello { display: none; }
+  }
+</style>
+
+<script>
+  (function () {
+    const helloEl = document.querySelector('.hero-hello') as HTMLElement | null;
+    const welcomeEl = document.querySelector('.hero-welcome') as HTMLElement | null;
+    const canvas = document.querySelector('.entrance-glitter') as HTMLCanvasElement | null;
+    if (!helloEl || !welcomeEl || !canvas) return;
+
+    // Reduced-motion shortcut — show WELCOME directly, skip the whole sequence.
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reducedMotion) {
+      welcomeEl.classList.add('is-visible');
+      helloEl.classList.add('is-gone');
+      canvas.remove();
+      return;
+    }
+
+    // -------- HELLO THERE growth + final-stretch blink --------
+    helloEl.classList.add('is-animating');
+
+    const duration = 3800;
+
+    // Four quick blinks crammed into the last 600ms before the pop. Each cycle is
+    // ~150ms: ~70ms hidden, ~80ms visible. The final state lands on "visible" so the
+    // pop has something to disappear.
+    const blinkSchedule = [
+      { at: duration - 600, opacity: '0.05' },
+      { at: duration - 520, opacity: '1' },
+      { at: duration - 450, opacity: '0.05' },
+      { at: duration - 370, opacity: '1' },
+      { at: duration - 300, opacity: '0.05' },
+      { at: duration - 220, opacity: '1' },
+      { at: duration - 150, opacity: '0.05' },
+      { at: duration - 70,  opacity: '1' },
+    ];
+    const blinkTimers: ReturnType<typeof setTimeout>[] = [];
+    for (const step of blinkSchedule) {
+      blinkTimers.push(setTimeout(() => { helloEl!.style.opacity = step.opacity; }, step.at));
+    }
+
+    // -------- The pop --------
+    setTimeout(() => {
+      for (const t of blinkTimers) clearTimeout(t);
+      helloEl.classList.add('is-gone');         // HELLO THERE disappears instantly
+      welcomeEl.classList.add('is-visible');    // WELCOME snaps in at the same instant
+      runGlitter();                              // confetti burst from center screen
+    }, duration);
+
+    // -------- Glitter burst --------
+    // 6-color rainbow (no red/orange): yellow, green, brand teal, blue, purple, pink.
+    // Spawned at the viewport center, 200 particles, radial burst, gravity-driven drift
+    // with a slight upward bias so they hang briefly before falling.
+    function runGlitter() {
+      const ctx = canvas!.getContext('2d');
+      if (!ctx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      canvas!.width = w * dpr;
+      canvas!.height = h * dpr;
+      canvas!.style.width = w + 'px';
+      canvas!.style.height = h + 'px';
+      ctx.scale(dpr, dpr);
+
+      const colors = ['#FBBF24', '#34D399', '#05d7d1', '#60A5FA', '#A78BFA', '#F472B6'];
+      const cx = w / 2;
+      const cy = h / 2;
+
+      type P = {
+        x: number; y: number;
+        vx: number; vy: number;
+        size: number;
+        color: string;
+        rot: number;
+        spin: number;
+      };
+      const particles: P[] = [];
+      const count = 220;
+      for (let i = 0; i < count; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = 7 + Math.random() * 11; // 7–18 px/frame initial
+        particles.push({
+          x: cx, y: cy,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed - 3,    // slight upward bias for arc
+          size: 3 + Math.random() * 5,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rot: Math.random() * Math.PI,
+          spin: (Math.random() - 0.5) * 0.35,
+        });
+      }
+
+      const glitterStart = performance.now();
+      const glitterDuration = 6000; // 6s after the pop — lingers well past the burst
+
+      function frame(now: number) {
+        const t = Math.min(1, (now - glitterStart) / glitterDuration);
+        ctx!.clearRect(0, 0, w, h);
+
+        // Fade curve: stay near full opacity for the first ~40% of the lifetime,
+        // then fade more steeply in the back half so they linger before disappearing.
+        const opacity = t < 0.4 ? 1 : 1 - (t - 0.4) / 0.6;
+
+        for (const p of particles) {
+          p.vy += 0.15;  // gentle gravity
+          p.vx *= 0.992; // mild air resistance
+          p.x += p.vx;
+          p.y += p.vy;
+          p.rot += p.spin;
+
+          ctx!.save();
+          ctx!.globalAlpha = Math.max(0, opacity);
+          ctx!.translate(p.x, p.y);
+          ctx!.rotate(p.rot);
+          ctx!.fillStyle = p.color;
+          ctx!.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 1.5);
+          ctx!.restore();
+        }
+
+        if (t < 1) requestAnimationFrame(frame);
+        else canvas!.remove();
+      }
+      requestAnimationFrame(frame);
+    }
+  })();
+</script>

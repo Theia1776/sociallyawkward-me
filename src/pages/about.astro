@@ -1,8 +1,99 @@
 ---
 import Layout from '../layouts/Layout.astro';
+
+const TEAL = '#05d7d1';
+const GOLD = '#E8B84B';
 ---
 
-<Layout title="About — sociallyawkward.me">
-  <h1 class="text-3xl font-semibold tracking-tight">About</h1>
-  <p class="mt-4 text-neutral-600">Placeholder about page.</p>
+<Layout
+  title="About Theia | RGV Web Designer — Socially Awkward Media"
+  description="Meet Theia Goodner — graphic designer since 2003, web designer since 2006, and the small-business champion behind Socially Awkward Media in Laguna Vista, TX."
+>
+
+  <!-- Banner -->
+  <header class="about-banner">
+    <p class="about-eyebrow">Well,</p>
+    <h1 class="about-heading">THIS IS AWKWARD</h1>
+    <img
+      src="/ollie-full-body.png"
+      alt="Ollie the mascot"
+      class="ollie"
+    />
+  </header>
+
+  <!-- Content -->
+  <div class="mx-auto mt-10 max-w-2xl px-6 pb-16">
+    <div
+      class="overflow-hidden rounded-xl bg-white shadow-sm"
+      style={`border: 2px solid ${TEAL};`}
+    >
+      <div class="h-2 w-full" style={`background-color: ${GOLD};`}></div>
+
+      <div class="space-y-5 p-8 leading-relaxed text-neutral-800">
+        <p class="text-lg font-bold">Some people stumble into creativity. Theia just never stumbled out.</p>
+
+        <p>It started in 2003 with a spark for graphic design — the kind that quietly takes over your brain and never really lets go. By 2006 she'd added web design to the mix, because apparently one creative obsession wasn't enough.</p>
+
+        <p>When Socially Awkward Media came to life in 2022, it didn't stay behind a screen for long. Theia took the brand into the community by organizing and hosting Small Business Saturday — a vendor event dedicated to spotlighting small and home-based businesses. For three years running, that event brought together 100+ vendors and real, enthusiastic community support. Because building up small businesses isn't just a service — it's something she genuinely believes in.</p>
+
+        <p>Today, Socially Awkward Media is exactly where it's always been heading — helping your brand look as good as the work you do.</p>
+
+        <p class="italic" style={`color: ${TEAL}; font-weight: 600;`}>
+          No matter what stage of your project you're in — from idea spark to goal reached — you're in the right place.
+        </p>
+      </div>
+    </div>
+  </div>
+
 </Layout>
+
+<style>
+  .about-banner {
+    position: relative;
+    background-color: #05d7d1;
+    border-radius: 12px;
+    padding: 30px 24px;
+    text-align: center;
+    overflow: visible;
+  }
+  .about-heading {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    font-size: 100px;
+    white-space: nowrap;
+    line-height: 1;
+    margin: 0;
+    position: relative;
+    z-index: 2;
+  }
+  /* "Well," eyebrow above the heading — same Lilita One + white-fill / gold-stroke style,
+     squished horizontally so it sits compactly in the top-left empty space of the banner. */
+  .about-eyebrow {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    -webkit-text-stroke: 12px #E8B84B;
+    paint-order: stroke fill;
+    font-size: 100px;
+    white-space: nowrap;
+    line-height: 1;
+    margin: 0;
+    text-align: left;
+    transform: scaleX(0.42);
+    transform-origin: left center;
+    letter-spacing: -0.05em;
+    position: relative;
+    z-index: 2;
+  }
+  .ollie {
+    position: absolute;
+    /* Feet planted on the top edge of the banner (10px = whitespace below his feet
+       in the rendered image at this height), right side, behind the heading via z-index. */
+    bottom: calc(100% - 10px);
+    right: 16px;
+    height: 200px;
+    width: auto;
+    z-index: 1;
+  }
+</style>
