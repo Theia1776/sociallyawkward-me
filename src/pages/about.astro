@@ -71,27 +71,16 @@ const GOLD = '#E8B84B';
   }
   .ollie {
     position: absolute;
-    /* Pixel values computed from measured DevTools positions:
-         banner right=851.2, second-W center=748.6, source PNG aspect=0.542
-       At height 220px, computed width = 220 * 0.542 = 119.24px.
-       Ollie's right edge viewport-x = 748.6 + 119.24/2 = 808.22.
-       CSS right = 851.2 - 808.22 = 42.98 -> 43px, which centers his
-       horizontal midline on the second W's center.
-       z-index: 1 keeps him behind the heading text. */
     bottom: 0;
-    right: 43px;
+    right: 44px;
     height: 220px;
     width: auto;
     z-index: 1;
   }
-  /* Handwritten 'Well,' — Caveat in black, tilted up-left. Pixel values
-     computed from measured DevTools bbox so the word's bottom edge lands
-     exactly on the banner top (y=104.8) and its left edge aligns with the
-     banner's left edge (x=115.2). */
   .about-well {
     position: absolute;
-    top: -64px;
-    left: 11px;
+    top: 0;
+    left: 0;
     transform: rotate(-10deg);
     transform-origin: bottom left;
     font-family: 'Caveat', cursive;
