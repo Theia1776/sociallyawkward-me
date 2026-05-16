@@ -13,6 +13,7 @@ const GOLD = '#E8B84B';
 
   <!-- Banner -->
   <header class="about-banner">
+    <p class="about-well" aria-hidden="true">Well,</p>
     <h1 class="about-heading">THIS IS AWKWARD</h1>
     <img
       src="/ollie-full-body.png"
@@ -70,14 +71,31 @@ const GOLD = '#E8B84B';
   }
   .ollie {
     position: absolute;
-    /* Feet planted on the top edge of the teal banner, body extending
-       upward prominently — character-peeking-over-the-content vibe.
-       The 10px offset accounts for whitespace below his feet in the
-       rendered PNG so his soles land flush with the banner edge. */
-    bottom: calc(100% - 10px);
-    right: 16px;
-    height: 240px;
+    /* Bottom of the banner, behind the heading (z-index: 1 vs heading z-index: 2)
+       so his body is hidden by the letters and only his head peeks up. Positioned
+       at right: 10% so the head sits roughly behind the second 'W' in AWKWARD.
+       200px keeps his crown safely below the navbar. */
+    bottom: 0;
+    right: 10%;
+    height: 200px;
     width: auto;
     z-index: 1;
+  }
+  /* Handwritten 'Well,' — Caveat in black, large, tilted up-left, overlapping
+     the top-left corner of the teal banner like a casual pen scrawl. */
+  .about-well {
+    position: absolute;
+    top: -28px;
+    left: 12px;
+    transform: rotate(-10deg);
+    transform-origin: bottom left;
+    font-family: 'Caveat', cursive;
+    font-weight: 700;
+    font-size: 64px;
+    color: #000000;
+    margin: 0;
+    line-height: 1;
+    z-index: 4;
+    pointer-events: none;
   }
 </style>
