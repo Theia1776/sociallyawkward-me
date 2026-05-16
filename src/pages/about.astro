@@ -72,14 +72,15 @@ const GOLD = '#E8B84B';
   .ollie {
     position: absolute;
     /* Pixel values computed from measured DevTools positions:
-         banner left=115.2, banner width=736, second-W center=748.6
-       Height = banner height (160px) so his image exactly fills the box.
-       right: 59px puts his horizontal center at 633.4 from banner left,
-       which aligns with the second W's center at viewport x=748.6.
+         banner right=851.2, second-W center=748.6, source PNG aspect=0.542
+       At height 220px, computed width = 220 * 0.542 = 119.24px.
+       Ollie's right edge viewport-x = 748.6 + 119.24/2 = 808.22.
+       CSS right = 851.2 - 808.22 = 42.98 -> 43px, which centers his
+       horizontal midline on the second W's center.
        z-index: 1 keeps him behind the heading text. */
     bottom: 0;
-    right: 59px;
-    height: 160px;
+    right: 43px;
+    height: 220px;
     width: auto;
     z-index: 1;
   }
