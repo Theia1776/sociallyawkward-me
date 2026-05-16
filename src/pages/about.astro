@@ -8,6 +8,7 @@ const GOLD = '#E8B84B';
 <Layout
   title="About Theia | RGV Web Designer — Socially Awkward Media"
   description="Meet Theia Goodner — graphic designer since 2003, web designer since 2006, and the small-business champion behind Socially Awkward Media in Laguna Vista, TX."
+  noMascot
 >
 
   <!-- Banner -->
@@ -69,10 +70,12 @@ const GOLD = '#E8B84B';
   }
   .ollie {
     position: absolute;
-    /* Inside the banner, bottom-right corner, behind the heading via z-index. */
-    bottom: 12px;
-    right: 20px;
-    height: 180px;
+    /* Sized to fit fully inside the banner box (banner is ~160px tall:
+       30px padding + 100px heading + 30px padding). 140px keeps Ollie's
+       head safely below the banner top. */
+    bottom: 0;
+    right: 24px;
+    height: 140px;
     width: auto;
     z-index: 1;
   }
