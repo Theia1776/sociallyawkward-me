@@ -71,22 +71,24 @@ const GOLD = '#E8B84B';
   }
   .ollie {
     position: absolute;
-    /* Bottom of the banner, behind the heading (z-index: 1 vs heading z-index: 2)
-       so his body is hidden by the letters and only his head peeks up. Positioned
-       at right: 10% so the head sits roughly behind the second 'W' in AWKWARD.
-       200px keeps his crown safely below the navbar. */
-    bottom: 0;
-    right: 10%;
-    height: 200px;
+    /* Stretches from banner bottom edge to top edge — feet planted at bottom,
+       head crown at the top. Image is 180px tall to account for the small
+       transparent margin around the character in the source PNG so the rendered
+       silhouette fills the box. Positioned at right: 25% so his head ends up
+       behind the K in AWKWARD. z-index: 1 keeps him behind the heading text. */
+    bottom: -10px;
+    right: 25%;
+    height: 180px;
     width: auto;
     z-index: 1;
   }
-  /* Handwritten 'Well,' — Caveat in black, large, tilted up-left, overlapping
-     the top-left corner of the teal banner like a casual pen scrawl. */
+  /* Handwritten 'Well,' — Caveat in black, large, tilted up-left. The W starts
+     right at the top-left corner of the teal box; rest of the word fans up and
+     to the right like a casual pen scrawl. */
   .about-well {
     position: absolute;
-    top: -28px;
-    left: 12px;
+    top: -50px;
+    left: 0;
     transform: rotate(-10deg);
     transform-origin: bottom left;
     font-family: 'Caveat', cursive;
