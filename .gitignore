@@ -1,5 +1,5 @@
-# build output
-dist/
+# build output — intentionally committed so Cloudflare can serve without a build step
+# dist/
 # generated types
 .astro/
 

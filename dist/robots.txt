@@ -1,0 +1,7 @@
+# Socially Awkward Media — crawler directives
+# Allow all bots full access; point them at the sitemap so they find every page.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.sociallyawkward.me/sitemap-index.xml
