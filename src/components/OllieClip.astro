@@ -229,6 +229,11 @@
     .ollie-clip-thought,
     .ollie-clip-panel { transition: none; }
   }
+
+  /* Mobile: hide the corner mascot entirely below 768px. Desktop layout unchanged. */
+  @media (max-width: 767px) {
+    .ollie-clip { display: none; }
+  }
 </style>
 
 <script>

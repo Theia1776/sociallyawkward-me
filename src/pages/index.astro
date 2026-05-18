@@ -61,7 +61,7 @@ const businessData = {
       <!-- Board -->
       <div
         class="relative flex flex-col items-center justify-center rounded-2xl px-20 py-16 shadow-2xl"
-        style="background: #ffffff; border: 6px solid #000000; min-width: 500px;"
+        style="background: #ffffff; border: 6px solid #000000;"
       >
         <p class="font-['Righteous'] text-3xl tracking-widest mb-4" style="color: #000000; position: relative; z-index: 2;">
           SOCIALLY AWKWARD MEDIA
@@ -121,7 +121,8 @@ const businessData = {
   .hero-hello {
     font-family: 'Lilita One', cursive;
     white-space: nowrap;
-    font-size: 120px;
+    /* Scales down on mobile so WELCOME / HELLO THERE fit the viewport. */
+    font-size: clamp(2.5rem, 10vw, 120px);
     line-height: 1;
     margin: 0;
   }

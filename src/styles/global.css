@@ -5,3 +5,11 @@
 html {
   scroll-behavior: smooth;
 }
+
+/* Prevent horizontal scrollbars from transient overflow (e.g. the home page's
+   HELLO THERE balloon stretch animation past the card boundary at large
+   intermediate scales). Banner headings themselves are clamped on mobile and
+   shouldn't overflow at rest. */
+body {
+  overflow-x: hidden;
+}

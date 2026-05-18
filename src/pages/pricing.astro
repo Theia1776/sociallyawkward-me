@@ -268,7 +268,8 @@ const additionalRates: Rate[] = [
     color: #ffffff;
     -webkit-text-stroke: 12px #E8B84B;
     paint-order: stroke fill;
-    font-size: 100px;
+    /* Scales down on mobile so the heading fits without horizontal overflow. */
+    font-size: clamp(2rem, 8vw, 100px);
     white-space: nowrap;
     line-height: 1;
     margin: 0;
