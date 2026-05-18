@@ -1,0 +1,293 @@
+---
+// Persistent corner mascot — Clippy-style thought bubble + FAQ chat panel.
+// Standalone: no intro sequence, no curtains, no glitter, no light switch.
+// Renders wherever Layout doesn't pass noMascot.
+---
+
+<div class="ollie-clip" data-state="closed">
+
+  <!-- Bubble + descending dot chain. Visible by default; hidden while panel is open. -->
+  <div class="ollie-clip-thought" aria-hidden="true">
+    <div class="ollie-clip-bubble">Here to help!</div>
+    <span class="ollie-clip-dot ollie-clip-dot-1"></span>
+    <span class="ollie-clip-dot ollie-clip-dot-2"></span>
+    <span class="ollie-clip-dot ollie-clip-dot-3"></span>
+  </div>
+
+  <!-- FAQ chat panel. Hidden by default; slides up when Ollie is clicked. -->
+  <div class="ollie-clip-panel" role="dialog" aria-label="Ollie's help panel" aria-hidden="true">
+    <div class="ollie-clip-panel-bar">
+      <button type="button" class="ollie-clip-close" aria-label="Close help panel">×</button>
+    </div>
+    <div class="ollie-clip-panel-content">
+      <div class="ollie-clip-questions" role="list">
+        <button type="button" class="ollie-clip-q" data-q="who" role="listitem">Who are you, little guy?</button>
+        <button type="button" class="ollie-clip-q" data-q="do" role="listitem">What do you do?</button>
+        <button type="button" class="ollie-clip-q" data-q="cost" role="listitem">How much does it cost?</button>
+        <button type="button" class="ollie-clip-q" data-q="start" role="listitem">How do I get started?</button>
+      </div>
+      <div class="ollie-clip-answer" aria-live="polite" hidden></div>
+    </div>
+  </div>
+
+  <!-- Ollie image — click target to toggle the chat panel. -->
+  <button type="button" class="ollie-clip-trigger" aria-label="Talk to Ollie">
+    <img
+      class="ollie-clip-img"
+      src="/ollie-full-body.png"
+      alt="Ollie the mascot"
+      draggable="false"
+    />
+  </button>
+</div>
+
+<style>
+  /* ---- Layout ---- */
+  .ollie-clip {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 999;
+    pointer-events: none; /* container itself transparent to clicks; only inner widgets catch them */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .ollie-clip-trigger {
+    all: unset;
+    display: block;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 8px;
+  }
+  .ollie-clip-trigger:focus-visible {
+    outline: 2px solid #05d7d1;
+    outline-offset: 4px;
+  }
+  .ollie-clip-img {
+    display: block;
+    height: 144px;
+    width: auto;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transform-origin: bottom center;
+    animation: ollie-clip-bob 3.6s ease-in-out infinite;
+  }
+  @keyframes ollie-clip-bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4px) rotate(-1.2deg); }
+  }
+
+  /* ---- Thought bubble + dot chain ----
+     Single wrapper so they show/hide together. Centered horizontally above Ollie. */
+  .ollie-clip-thought {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    pointer-events: none;
+    transition: opacity 0.2s ease-out;
+  }
+  .ollie-clip-bubble {
+    background: #ffffff;
+    color: #1f1f1f;
+    border: 2px solid #05d7d1;
+    border-radius: 14px;
+    padding: 0.5rem 0.95rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    line-height: 1.2;
+  }
+  .ollie-clip-dot {
+    display: block;
+    background: #ffffff;
+    border: 1.5px solid #05d7d1;
+    border-radius: 50%;
+    box-sizing: border-box;
+  }
+  .ollie-clip-dot-1 { width: 10px; height: 10px; margin-top: 6px; }
+  .ollie-clip-dot-2 { width: 6px;  height: 6px;  margin-top: 4px; }
+  .ollie-clip-dot-3 { width: 3px;  height: 3px;  margin-top: 4px; }
+
+  /* Hide thought when panel is open */
+  .ollie-clip[data-state="panel-open"] .ollie-clip-thought {
+    opacity: 0;
+    visibility: hidden;
+    height: 0;       /* collapse layout so panel takes its space */
+    overflow: hidden;
+  }
+
+  /* ---- Chat panel ----
+     Hidden by default. Slides up + fades in when data-state="panel-open". */
+  .ollie-clip-panel {
+    width: 280px;
+    background: #ffffff;
+    border: 2px solid #05d7d1;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.22);
+    opacity: 0;
+    transform: translateY(16px);
+    pointer-events: none;
+    height: 0;       /* collapse layout when hidden so it doesn't push Ollie up */
+    visibility: hidden;
+    transition: opacity 0.28s ease-out, transform 0.28s ease-out;
+  }
+  .ollie-clip[data-state="panel-open"] .ollie-clip-panel {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+    height: auto;
+    visibility: visible;
+  }
+
+  .ollie-clip-panel-bar {
+    height: 36px;
+    background: #E8B84B;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 6px;
+  }
+  .ollie-clip-close {
+    all: unset;
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1a1208;
+    line-height: 1;
+    transition: background 0.2s ease;
+  }
+  .ollie-clip-close:hover { background: rgba(0, 0, 0, 0.14); }
+  .ollie-clip-close:focus-visible {
+    outline: 2px solid #05d7d1;
+    outline-offset: 1px;
+  }
+
+  .ollie-clip-panel-content {
+    padding: 12px;
+  }
+  .ollie-clip-questions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .ollie-clip-q {
+    all: unset;
+    cursor: pointer;
+    display: block;
+    padding: 9px 12px;
+    background: #05d7d1;
+    color: #ffffff;
+    border-radius: 8px;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: left;
+    transition: background 0.15s ease, transform 0.1s ease;
+  }
+  .ollie-clip-q:hover  { background: #04bcb6; }
+  .ollie-clip-q:active { transform: scale(0.985); }
+  .ollie-clip-q:focus-visible {
+    outline: 2px solid #E8B84B;
+    outline-offset: 2px;
+  }
+
+  .ollie-clip-answer {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #f6f6f6;
+    border-left: 3px solid #05d7d1;
+    border-radius: 6px;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    color: #1f1f1f;
+    white-space: pre-line; /* render \n in answer strings as real line breaks */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ollie-clip-img { animation: none; }
+    .ollie-clip-thought,
+    .ollie-clip-panel { transition: none; }
+  }
+</style>
+
+<script>
+  (function () {
+    const root = document.querySelector('.ollie-clip') as HTMLElement | null;
+    const trigger = root?.querySelector('.ollie-clip-trigger') as HTMLButtonElement | null;
+    const closeBtn = root?.querySelector('.ollie-clip-close') as HTMLButtonElement | null;
+    const thought = root?.querySelector('.ollie-clip-thought') as HTMLElement | null;
+    const panel = root?.querySelector('.ollie-clip-panel') as HTMLElement | null;
+    const answerEl = root?.querySelector('.ollie-clip-answer') as HTMLElement | null;
+    const qButtons = Array.from(root?.querySelectorAll('.ollie-clip-q') || []) as HTMLButtonElement[];
+    if (!root || !trigger || !closeBtn || !thought || !panel || !answerEl) return;
+
+    const ANSWERS: Record<string, string> = {
+      who:
+        "It looks like you're trying to find out who I am.\n" +
+        "I'm Ollie. I hold down the corner so Theia doesn't have to. I'm here to help.",
+      do:
+        "Socially Awkward Media does three things really well:\n" +
+        "🎨 Graphic Design — logos, branding, the works\n" +
+        "🌐 Web Design — sites that actually function like sites\n" +
+        "📱 Social Media — showing up online, consistently, without the chaos\n" +
+        "Basically? We make your brand look as good as the work you do.",
+      cost:
+        "Oh, you want to talk money. Bold.\n" +
+        "Every project's a little different, so Theia handles that conversation personally.\n" +
+        "Head to the contact page — she doesn't bite.\n" +
+        "(I might. Just kidding. I don't have teeth.)",
+      start:
+        "Ooh, a new friend! 🎉 Getting started is the easy part — just head to the contact page and tell us what your goals are for your website. What's its priority purpose, are there any features you want it to have specifically, and do you need a shopping cart. Theia takes it from there. You already did your hardest part just by knocking on the door.",
+    };
+
+    function setOpen(open: boolean) {
+      root!.dataset.state = open ? 'panel-open' : 'closed';
+      thought!.setAttribute('aria-hidden', open ? 'true' : 'false');
+      panel!.setAttribute('aria-hidden', open ? 'false' : 'true');
+      trigger!.setAttribute('aria-expanded', open ? 'true' : 'false');
+      if (!open) {
+        // Reset answer area when closing so reopening starts fresh.
+        answerEl!.textContent = '';
+        answerEl!.setAttribute('hidden', '');
+      }
+    }
+
+    function togglePanel() {
+      setOpen(root!.dataset.state !== 'panel-open');
+    }
+
+    trigger.addEventListener('click', togglePanel);
+    closeBtn.addEventListener('click', () => setOpen(false));
+
+    qButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.q;
+        if (!key || !ANSWERS[key]) return;
+        answerEl!.textContent = ANSWERS[key];
+        answerEl!.removeAttribute('hidden');
+      });
+    });
+
+    // Escape closes the panel and returns focus to Ollie
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root!.dataset.state === 'panel-open') {
+        setOpen(false);
+        trigger!.focus();
+      }
+    });
+  })();
+</script>
