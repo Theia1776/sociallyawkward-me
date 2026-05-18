@@ -72,9 +72,14 @@ const GOLD = '#E8B84B';
   }
   .ollie {
     position: absolute;
-    bottom: -25px;
+    /* Bottom offset scales with size so his feet hang proportionally below the
+       banner edge on mobile too (less negative bottom when he's smaller). */
+    bottom: clamp(-25px, -2vw, -14px);
     right: 16px;
-    height: 260px;
+    /* Scales with the viewport so he shrinks alongside the banner heading
+       (which uses clamp(2rem, 8vw, 100px)). At ≥1300px viewport he's the full
+       260px; at narrow mobile viewports he settles at 150px. */
+    height: clamp(150px, 20vw, 260px);
     width: auto;
     z-index: 1;
     /* Ollie is decorative; let clicks pass through to the nav links he overlaps. */
