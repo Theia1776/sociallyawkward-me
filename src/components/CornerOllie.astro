@@ -1,16 +1,15 @@
 ---
-// Persistent corner mascot — appears in the bottom-right of every page via Layout.
-// Click or hover his image to show a "Here to help!" speech bubble above him.
-// Intentionally minimal: no intro sequence, no chat panel, no FAQ.
+// Persistent corner mascot — bottom-right of every page that doesn't pass noMascot.
+// The speech bubble is ALWAYS visible (Clippy-style) and starts on "Here to help!".
+// Clicking Ollie cycles through a short list of friendly responses, then loops.
 ---
 
-<div class="corner-ollie" data-bubble-state="hidden">
-  <div class="corner-ollie-bubble" role="status">Here to help!</div>
+<div class="corner-ollie">
+  <div class="corner-ollie-bubble" role="status" aria-live="polite">Here to help!</div>
   <button
     type="button"
     class="corner-ollie-trigger"
-    aria-label="Ollie says hi — click to toggle the speech bubble"
-    aria-expanded="false"
+    aria-label="Tap Ollie for a tip"
   >
     <img
       class="corner-ollie-img"
@@ -27,7 +26,11 @@
     bottom: 1rem;
     right: 1rem;
     z-index: 999;
-    pointer-events: none; /* container is transparent to clicks; only the button catches them */
+    pointer-events: none; /* container itself is click-through; only inner widgets catch clicks */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
   }
   .corner-ollie-trigger {
     all: unset;
@@ -55,11 +58,9 @@
     50%      { transform: translateY(-4px) rotate(-1.2deg); }
   }
 
-  /* Bubble — hidden by default. Revealed on hover, keyboard focus, OR click (via data-bubble-state). */
+  /* Always-visible Clippy-style bubble — sits above Ollie and stays put. */
   .corner-ollie-bubble {
-    position: absolute;
-    bottom: calc(100% + 10px);
-    right: 0;
+    position: relative;
     background: #ffffff;
     color: #1f1f1f;
     border: 2px solid #05d7d1;
@@ -68,23 +69,33 @@
     font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
     font-size: 0.9rem;
     font-weight: 600;
-    white-space: nowrap;
+    line-height: 1.35;
+    max-width: 260px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
-    opacity: 0;
-    transform: translateY(6px);
-    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
     pointer-events: none;
+    /* Animate text changes gently so cycling feels alive */
+    transition: opacity 0.18s ease-out;
   }
-  .corner-ollie:hover .corner-ollie-bubble,
-  .corner-ollie:focus-within .corner-ollie-bubble,
-  .corner-ollie[data-bubble-state="visible"] .corner-ollie-bubble {
-    opacity: 1;
-    transform: translateY(0);
+  .corner-ollie-bubble.is-swapping {
+    opacity: 0;
+  }
+  /* Little tail at the bubble's bottom-right pointing toward Ollie's head */
+  .corner-ollie-bubble::after {
+    content: '';
+    position: absolute;
+    right: 24px;
+    bottom: -10px;
+    width: 0;
+    height: 0;
+    border: 10px solid transparent;
+    border-top-color: #ffffff;
+    /* fake the border match by stacking a second triangle behind it */
+    filter: drop-shadow(0 1px 0 #05d7d1) drop-shadow(1px 0 0 #05d7d1) drop-shadow(-1px 0 0 #05d7d1);
   }
 
   @media (prefers-reduced-motion: reduce) {
     .corner-ollie-img { animation: none; }
-    .corner-ollie-bubble { transition: opacity 0.15s linear; transform: translateY(0); }
+    .corner-ollie-bubble { transition: none; }
   }
 </style>
 
@@ -92,32 +103,30 @@
   (function () {
     const root = document.querySelector('.corner-ollie') as HTMLElement | null;
     const trigger = root?.querySelector('.corner-ollie-trigger') as HTMLButtonElement | null;
-    if (!root || !trigger) return;
+    const bubble = root?.querySelector('.corner-ollie-bubble') as HTMLElement | null;
+    if (!root || !trigger || !bubble) return;
 
-    function setBubble(visible: boolean) {
-      root!.dataset.bubbleState = visible ? 'visible' : 'hidden';
-      trigger!.setAttribute('aria-expanded', visible ? 'true' : 'false');
-    }
+    // Short list of friendly Ollie tips. Index 0 is the default "Here to help!" line
+    // that's rendered server-side; clicking advances and loops back to it.
+    const messages = [
+      'Here to help!',
+      "Hi! I'm Ollie — Theia's mascot.",
+      "Pricing's up top — give it a click!",
+      "Got a project? Tap 'Contact'.",
+      "Theia builds sites that don't look like everyone else's.",
+    ];
+    let index = 0;
 
-    // Click toggles the bubble (so touch users without :hover can still see it).
-    trigger.addEventListener('click', (e) => {
-      e.stopPropagation();
-      setBubble(root!.dataset.bubbleState !== 'visible');
-    });
+    trigger.addEventListener('click', () => {
+      index = (index + 1) % messages.length;
+      const next = messages[index];
 
-    // Tap/click anywhere else dismisses the bubble.
-    document.addEventListener('click', (e) => {
-      if (root!.dataset.bubbleState === 'visible' && !root!.contains(e.target as Node)) {
-        setBubble(false);
-      }
-    });
-
-    // Escape dismisses + returns focus to the trigger.
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && root!.dataset.bubbleState === 'visible') {
-        setBubble(false);
-        trigger!.focus();
-      }
+      // Brief fade-out, swap text, fade back in — keeps cycling from feeling jarring
+      bubble.classList.add('is-swapping');
+      window.setTimeout(() => {
+        bubble.textContent = next;
+        bubble.classList.remove('is-swapping');
+      }, 180);
     });
   })();
 </script>

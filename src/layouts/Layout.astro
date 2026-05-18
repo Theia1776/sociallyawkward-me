@@ -14,6 +14,8 @@ interface Props {
   bleed?: boolean;
   /** If true, suppress the top Nav on this page (home renders its own under WELCOME). */
   noNav?: boolean;
+  /** If true, suppress the persistent corner Ollie mascot on this page (e.g., the home hero). */
+  noMascot?: boolean;
 }
 
 const {
@@ -24,6 +26,7 @@ const {
   wide = false,
   bleed = false,
   noNav = false,
+  noMascot = false,
 } = Astro.props;
 
 // Build absolute URLs against the configured `site` in astro.config.mjs.
@@ -89,6 +92,6 @@ const SITE_NAME = 'Socially Awkward Media';
         <slot />
       </main>
     )}
-    <CornerOllie />
+    {!noMascot && <CornerOllie />}
   </body>
 </html>
