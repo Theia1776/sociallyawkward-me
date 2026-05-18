@@ -50,6 +50,7 @@ const businessData = {
   description="Web & logo design for Rio Grande Valley small businesses — McAllen, Brownsville, Harlingen, Weslaco. Veteran-owned, woman-owned, in Laguna Vista, TX."
   structuredData={businessData}
   bleed
+  noNav
 >
   <main class="min-h-screen flex flex-col items-center justify-center overflow-hidden" style="background: #05d7d1;">
 
@@ -82,6 +83,21 @@ const businessData = {
         style="height: 480px; width: auto; right: -162px; bottom: -25px; z-index: 1;"
       />
     </div>
+
+    <!-- Inline nav under WELCOME (home only — Layout's top Nav is suppressed via noNav).
+         Fades in at the same instant WELCOME pops. -->
+    <nav class="hero-nav" aria-label="Main">
+      <ul class="hero-nav-list">
+        <li><a href="/" aria-current="page">Home</a></li>
+        <li><a href="/dream-big">Dream Big</a></li>
+        <li><a href="/pricing">Pricing</a></li>
+        <li><a href="/contact">Contact</a></li>
+        <li><a href="/about">About</a></li>
+      </ul>
+    </nav>
+
+    <!-- Hint line — fades in 2 seconds after WELCOME pops. -->
+    <p class="hero-hint" aria-live="polite">Please click any of the links to continue.</p>
 
   </main>
 
@@ -160,10 +176,61 @@ const businessData = {
     pointer-events: none;
   }
 
-  /* Respect reduced-motion: skip the animation entirely, just show WELCOME. */
+  /* Hero inline nav — under WELCOME, on the teal background. Fades in at the pop. */
+  .hero-nav {
+    margin-top: 2.5rem;
+    opacity: 0;
+    transition: opacity 0.6s ease-out;
+  }
+  .hero-nav.is-visible { opacity: 1; }
+  .hero-nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem 1.75rem;
+  }
+  .hero-nav-list a {
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    font-size: 1.35rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 0.35rem 0.25rem;
+    border-bottom: 3px solid transparent;
+    transition: border-color 0.18s ease, transform 0.18s ease;
+  }
+  .hero-nav-list a:hover,
+  .hero-nav-list a:focus-visible {
+    border-bottom-color: #E8B84B;
+    transform: translateY(-1px);
+    outline: none;
+  }
+  .hero-nav-list a[aria-current="page"] {
+    border-bottom-color: #ffffff;
+  }
+
+  /* Hero hint line — fades in 2s after the pop. */
+  .hero-hint {
+    margin-top: 1.5rem;
+    font-family: 'Lilita One', cursive;
+    color: #ffffff;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: opacity 0.9s ease-out;
+    text-align: center;
+  }
+  .hero-hint.is-visible { opacity: 1; }
+
+  /* Respect reduced-motion: skip the animation entirely, just show WELCOME + nav + hint. */
   @media (prefers-reduced-motion: reduce) {
     .hero-welcome { opacity: 1; }
     .hero-hello { display: none; }
+    .hero-nav,
+    .hero-hint { opacity: 1; transition: none; }
   }
 </style>
 
@@ -171,13 +238,17 @@ const businessData = {
   (function () {
     const helloEl = document.querySelector('.hero-hello') as HTMLElement | null;
     const welcomeEl = document.querySelector('.hero-welcome') as HTMLElement | null;
+    const navEl = document.querySelector('.hero-nav') as HTMLElement | null;
+    const hintEl = document.querySelector('.hero-hint') as HTMLElement | null;
     const canvas = document.querySelector('.entrance-glitter') as HTMLCanvasElement | null;
     if (!helloEl || !welcomeEl || !canvas) return;
 
-    // Reduced-motion shortcut — show WELCOME directly, skip the whole sequence.
+    // Reduced-motion shortcut — show WELCOME, nav, and hint directly; skip animations.
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reducedMotion) {
       welcomeEl.classList.add('is-visible');
+      navEl?.classList.add('is-visible');
+      hintEl?.classList.add('is-visible');
       helloEl.classList.add('is-gone');
       canvas.remove();
       return;
@@ -211,7 +282,11 @@ const businessData = {
       for (const t of blinkTimers) clearTimeout(t);
       helloEl.classList.add('is-gone');         // HELLO THERE disappears instantly
       welcomeEl.classList.add('is-visible');    // WELCOME snaps in at the same instant
+      navEl?.classList.add('is-visible');       // Nav links fade in alongside WELCOME
       runGlitter();                              // confetti burst from center screen
+
+      // Hint line fades in 2 seconds after the WELCOME pop.
+      setTimeout(() => { hintEl?.classList.add('is-visible'); }, 2000);
     }, duration);
 
     // -------- Glitter burst --------

@@ -11,6 +11,8 @@ interface Props {
   structuredData?: Record<string, unknown> | Array<Record<string, unknown>>;
   wide?: boolean;
   bleed?: boolean;
+  /** If true, suppress the top Nav on this page (home renders its own under WELCOME). */
+  noNav?: boolean;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   structuredData,
   wide = false,
   bleed = false,
+  noNav = false,
 } = Astro.props;
 
 // Build absolute URLs against the configured `site` in astro.config.mjs.
@@ -77,7 +80,7 @@ const SITE_NAME = 'Socially Awkward Media';
     )}
   </head>
   <body class="min-h-screen bg-white text-neutral-800 antialiased">
-    <Nav />
+    {!noNav && <Nav />}
     {bleed ? (
       <slot />
     ) : (
