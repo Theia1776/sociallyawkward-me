@@ -80,8 +80,7 @@ const businessData = {
       <img
         src="/ollie-full-body.png"
         alt="Ollie the mascot"
-        class="absolute hidden md:block"
-        style="height: 480px; width: auto; right: -162px; bottom: -25px; z-index: 1;"
+        class="home-ollie-side"
       />
     </div>
 
@@ -168,6 +167,25 @@ const businessData = {
   }
   .hero-hello.is-gone {
     display: none;
+  }
+
+  /* Side Ollie next to the whiteboard. Desktop: full 480px with his body
+     midline near the card's right edge. Mobile: scaled down so he fits
+     alongside the smaller card without spilling off the screen. */
+  .home-ollie-side {
+    position: absolute;
+    height: 480px;
+    width: auto;
+    right: -162px;
+    bottom: -25px;
+    z-index: 1;
+  }
+  @media (max-width: 767px) {
+    .home-ollie-side {
+      height: 220px;
+      right: -20px;
+      bottom: -10px;
+    }
   }
 
   /* Full-viewport glitter canvas. */
