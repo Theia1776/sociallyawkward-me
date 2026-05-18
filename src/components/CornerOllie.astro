@@ -1,0 +1,123 @@
+---
+// Persistent corner mascot — appears in the bottom-right of every page via Layout.
+// Click or hover his image to show a "Here to help!" speech bubble above him.
+// Intentionally minimal: no intro sequence, no chat panel, no FAQ.
+---
+
+<div class="corner-ollie" data-bubble-state="hidden">
+  <div class="corner-ollie-bubble" role="status">Here to help!</div>
+  <button
+    type="button"
+    class="corner-ollie-trigger"
+    aria-label="Ollie says hi — click to toggle the speech bubble"
+    aria-expanded="false"
+  >
+    <img
+      class="corner-ollie-img"
+      src="/ollie-full-body.png"
+      alt="Ollie the mascot"
+      draggable="false"
+    />
+  </button>
+</div>
+
+<style>
+  .corner-ollie {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    z-index: 999;
+    pointer-events: none; /* container is transparent to clicks; only the button catches them */
+  }
+  .corner-ollie-trigger {
+    all: unset;
+    display: block;
+    cursor: pointer;
+    pointer-events: auto;
+    border-radius: 8px;
+  }
+  .corner-ollie-trigger:focus-visible {
+    outline: 2px solid #05d7d1;
+    outline-offset: 4px;
+  }
+  .corner-ollie-img {
+    display: block;
+    width: auto;
+    height: 144px;
+    user-select: none;
+    -webkit-user-drag: none;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+    transform-origin: bottom center;
+    animation: corner-ollie-bob 3.6s ease-in-out infinite;
+  }
+  @keyframes corner-ollie-bob {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-4px) rotate(-1.2deg); }
+  }
+
+  /* Bubble — hidden by default. Revealed on hover, keyboard focus, OR click (via data-bubble-state). */
+  .corner-ollie-bubble {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    right: 0;
+    background: #ffffff;
+    color: #1f1f1f;
+    border: 2px solid #05d7d1;
+    border-radius: 14px;
+    padding: 0.55rem 0.95rem;
+    font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    pointer-events: none;
+  }
+  .corner-ollie:hover .corner-ollie-bubble,
+  .corner-ollie:focus-within .corner-ollie-bubble,
+  .corner-ollie[data-bubble-state="visible"] .corner-ollie-bubble {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .corner-ollie-img { animation: none; }
+    .corner-ollie-bubble { transition: opacity 0.15s linear; transform: translateY(0); }
+  }
+</style>
+
+<script>
+  (function () {
+    const root = document.querySelector('.corner-ollie') as HTMLElement | null;
+    const trigger = root?.querySelector('.corner-ollie-trigger') as HTMLButtonElement | null;
+    if (!root || !trigger) return;
+
+    function setBubble(visible: boolean) {
+      root!.dataset.bubbleState = visible ? 'visible' : 'hidden';
+      trigger!.setAttribute('aria-expanded', visible ? 'true' : 'false');
+    }
+
+    // Click toggles the bubble (so touch users without :hover can still see it).
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      setBubble(root!.dataset.bubbleState !== 'visible');
+    });
+
+    // Tap/click anywhere else dismisses the bubble.
+    document.addEventListener('click', (e) => {
+      if (root!.dataset.bubbleState === 'visible' && !root!.contains(e.target as Node)) {
+        setBubble(false);
+      }
+    });
+
+    // Escape dismisses + returns focus to the trigger.
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && root!.dataset.bubbleState === 'visible') {
+        setBubble(false);
+        trigger!.focus();
+      }
+    });
+  })();
+</script>

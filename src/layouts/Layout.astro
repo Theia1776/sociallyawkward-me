@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
+import CornerOllie from '../components/CornerOllie.astro';
 
 interface Props {
   title: string;
@@ -88,5 +89,6 @@ const SITE_NAME = 'Socially Awkward Media';
         <slot />
       </main>
     )}
+    <CornerOllie />
   </body>
 </html>
