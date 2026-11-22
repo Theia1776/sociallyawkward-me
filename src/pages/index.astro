@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { rgvCities } from '../data/rgv-cities';
 
 // LocalBusiness structured data — helps Google understand who Theia is, where she works,
 // and what services she offers. Lives on the home page only (canonical for the business).
@@ -93,6 +94,7 @@ const businessData = {
         <li><a href="/pricing">Pricing</a></li>
         <li><a href="/contact">Contact</a></li>
         <li><a href="/about">About</a></li>
+        <li><a href="/locations">Locations</a></li>
       </ul>
     </nav>
 
@@ -100,6 +102,21 @@ const businessData = {
     <p class="hero-hint" aria-live="polite">Please click any of the links to continue.</p>
 
   </main>
+
+  <!-- Readable text for visitors and search engines: the same wording already in this page's
+       description and business data, plus links into every Rio Grande Valley location page. -->
+  <section class="mx-auto max-w-3xl px-4 py-16 text-center" aria-labelledby="home-about">
+    <h2 id="home-about" class="text-2xl font-semibold tracking-tight">Web &amp; Logo Design in the Rio Grande Valley</h2>
+    <p class="mt-4 text-neutral-700">
+      Web design, logo design, and graphic design for small businesses in the Rio Grande Valley. Veteran-owned and woman-owned, based in Laguna Vista, TX.
+    </p>
+    <p class="mt-2 text-neutral-700">Helping your brand look as good as the work you do.</p>
+    <ul class="mt-8 flex flex-wrap justify-center gap-x-5 gap-y-2 text-sm">
+      {rgvCities.map((city) => (
+        <li><a class="text-neutral-600 underline decoration-neutral-300 underline-offset-4 hover:text-neutral-900" href={`/locations/${city.slug}`}>{city.name}</a></li>
+      ))}
+    </ul>
+  </section>
 
   <!-- Full-viewport canvas for the entrance glitter burst. Fixed positioning so particles
        can drift the full height of the page; pointer-events:none so it doesn't block clicks. -->
